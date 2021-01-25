@@ -6,7 +6,9 @@
 
 LiquidCrystal lcd(9, 8, 7, 6, 5, 4);
 int menu=1;
-
+bool psButtonUp;
+bool psButtonDown
+  ;
 void setup(void) {
   lcd.begin(16, 2);
   pinMode(buttonUp, INPUT_PULLUP);
@@ -36,16 +38,21 @@ void dispMenu(void){
 }
 
 void changeMenu(void){
-  if(digitalRead(buttonUp) == HIGH) {
+  if(digitalRead(buttonUp) == HIGH && psButtonDown == LOW) {
+    psButtonDown = HIGH;
     menu=menu+1;
     if(menu>3){
       menu=1;
     }
   }
-  if(digitalRead(buttonDown) == HIGH){
+  if(digitalRead(buttonDown) == HIGH && psButtonDown == LOW){
+    psButtonDown = HIGH;
     menu=menu-1;
     if(menu<1){
       menu=3;
     }
   }
+  psButtonUp = digitalRead(buttonUp);
+  psButtonDown = digitalRead(buttonDown);
+  
 }
