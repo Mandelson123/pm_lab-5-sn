@@ -5,6 +5,7 @@
 #define buttonUp    11
 #define buttonDown  13
 #define buttonOK  12
+#define pwm 10
 LiquidCrystal lcd(9, 8, 7, 6, 5, 4);
 int menu=1;
 bool psButtonUp = LOW;
@@ -42,6 +43,8 @@ void setup(void){
   pinMode(LedRed, OUTPUT);
   pinMode(LedGreen, OUTPUT);
   pinMode(LedBlue, OUTPUT);
+  pinMode(pwm,OUTPUT);
+  analogWrite(pwm,0);
 }
 
 void loop(void) {
@@ -49,6 +52,7 @@ void loop(void) {
   changeMenu();
   readTemperature();
   changeRGBLed();
+  runFAN();
 }
 void changeRGBLed(void){
   float change = (temperature + 40.0f) * 255.0f / (125.0f + 40.0f);
@@ -62,6 +66,13 @@ void readTemperature(void){
   float resolution = (5.0f / 1024.0f);
   float voltage = resolution * digital;
   temperature = (voltage-0.1f) * (125.0f+40.0f) / (1.75f-0.1f) - 40.0f;
+}
+
+void runFAN(void){
+if(temperature>40)
+{
+  analogWrite(pwm, 255);
+}
 }
 
 void dispMenu(void){
