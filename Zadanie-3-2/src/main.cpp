@@ -1,8 +1,10 @@
-#include <Arduino.h>
 #include <LiquidCrystal.h>
-
+#define LedRed 3
+#define LedGreen 1
+#define LedBlue 2
 #define buttonUp    11
 #define buttonDown  13
+#define buttonOK  12
 LiquidCrystal lcd(9, 8, 7, 6, 5, 4);
 int menu=1;
 bool psButtonUp = LOW;
@@ -36,14 +38,25 @@ void setup(void){
   lcd.begin(16, 2);
   pinMode(buttonUp, INPUT_PULLUP);
   pinMode(buttonDown, INPUT_PULLUP);
+  pinMode(buttonOK, INPUT_PULLUP);
+  pinMode(LedRed, OUTPUT);
+  pinMode(LedGreen, OUTPUT);
+  pinMode(LedBlue, OUTPUT);
 }
 
 void loop(void) {
   dispMenu();
   changeMenu();
   readTemperature();
+  changeRGBLed();
 }
-
+void changeRGBLed(void){
+  float change = (temperature + 40.0f) * 255.0f / (125.0f + 40.0f);
+  analogWrite(LedRed, 0+change);
+  analogWrite(LedGreen, 0);
+  analogWrite(LedBlue, 255+change);
+}
+  
 void readTemperature(void){
   unsigned int digital = analogRead(A5);
   float resolution = (5.0f / 1024.0f);
